@@ -102,6 +102,7 @@
       margin: 0 0 24px;
       letter-spacing: -0.03em;
       word-break: keep-all;
+      overflow-wrap: anywhere;
     }
 
     .selected {
@@ -127,6 +128,7 @@
       font-weight: 800;
       margin: 0 0 34px;
       word-break: keep-all;
+      overflow-wrap: anywhere;
     }
 
     .btn {
@@ -307,15 +309,51 @@
         margin: 8px 0 18px;
       }
 
-      .event-title {
-        font-size: 28px;
-        line-height: 1.16;
-        margin-bottom: 18px;
+      #view-step1 .event-title {
+        font-size: 30px;
+        line-height: 1.14;
+        margin-bottom: 22px;
+        letter-spacing: -0.04em;
       }
 
-      .selected {
-        font-size: 20px;
+      #view-step1 .selected {
+        font-size: 21px;
+        margin-bottom: 26px;
+      }
+
+      #view-step2 .event-title {
+        font-size: 27px !important;
+        line-height: 1.18;
+        margin-bottom: 18px !important;
+      }
+
+      #view-step2 .selected {
+        font-size: 18px !important;
+        margin-bottom: 22px !important;
+      }
+
+      #view-result .event-title {
+        font-size: 30px !important;
+        line-height: 1.14;
+        margin-bottom: 22px !important;
+        letter-spacing: -0.04em;
+      }
+
+      #view-result .selected {
+        font-size: 18px !important;
+        margin-bottom: 28px !important;
+      }
+
+      #view-result .status {
+        font-size: 40px;
         margin-bottom: 24px;
+      }
+
+      #view-result .detail {
+        font-size: 22px;
+        line-height: 1.55;
+        margin-bottom: 30px;
+        letter-spacing: -0.01em;
       }
 
       .venue-list {
@@ -324,17 +362,25 @@
       }
 
       .venue-item {
-        min-height: 98px;
+        min-height: 108px;
         padding: 18px 16px;
         border-radius: 10px;
+        align-items: center;
+      }
+
+      .venue-item > div {
+        width: 100%;
       }
 
       .venue-item .date {
-        font-size: 20px;
+        font-size: 29px;
+        line-height: 1.05;
+        margin-bottom: 6px;
       }
 
       .venue-item .name {
-        font-size: 19px;
+        font-size: 22px;
+        line-height: 1.18;
       }
 
       .input {
@@ -346,6 +392,18 @@
         min-height: 44px;
         font-size: 15px;
         margin-bottom: 12px;
+      }
+
+      .history-title {
+        font-size: 15px;
+      }
+
+      .history-venue {
+        font-size: 13px;
+      }
+
+      .history-status {
+        font-size: 18px;
       }
 
       .footer-bar {
@@ -374,8 +432,6 @@
     <div class="content">
       <div id="view-step1" class="view active">
         <div class="menu">≡</div>
-        <div class="event-title">2026.2.10[Tue] 京セラドーム大阪</div>
-        <div class="selected">選択中： TREASURE</div>
 
         <div class="venue-list" id="venue-options-container"></div>
       </div>
@@ -474,6 +530,10 @@
       return `${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
     }
 
+    function stripApplicationSuffix(label) {
+      return label.replace(/\s*公開リハーサルに応募する$/, '');
+    }
+
     function goToStep2() {
       if (!currentSelectedVenue) return;
       document.getElementById('selected-venue-display').textContent = `選択中： ${currentSelectedVenue}`;
@@ -492,7 +552,7 @@
 
         globalHistory.unshift({ serial, venue: currentSelectedVenue, time: formatNow(), status: statusLabel });
 
-        document.getElementById('res-venue-name').textContent = currentSelectedVenue;
+        document.getElementById('res-venue-name').textContent = stripApplicationSuffix(currentSelectedVenue);
         const resStatus = document.getElementById('res-status');
         const resText = document.getElementById('res-text');
 
@@ -522,7 +582,7 @@
           card.className = 'history-card';
           card.innerHTML = `
             <div><span class="history-serial">${item.serial}</span><span class="history-time">${item.time}</span></div>
-            <div class="history-title">TREASURE 2026 FAN CON [STAGE]</div>
+            <div class="history-title">「TREASURE 2026 FAN CON」リリース記念シリアルコードキャンペーン</div>
             <div class="history-venue">${item.venue}</div>
             <div class="history-status" style="color:${item.status === '当選' ? 'var(--red)' : 'var(--blue)'}">${item.status}</div>
           `;
