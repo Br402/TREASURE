@@ -547,7 +547,7 @@
 
       setTimeout(() => {
         loader.style.display = 'none';
-        const isWin = Math.random() < 0.3;
+        const isWin = Math.random() < 0.4;
         const statusLabel = isWin ? '当選' : '落選';
 
         globalHistory.unshift({ serial, venue: currentSelectedVenue, time: formatNow(), status: statusLabel });
