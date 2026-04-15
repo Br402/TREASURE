@@ -283,6 +283,78 @@
       animation: spin .8s linear infinite;
     }
 
+
+    @media (max-width: 768px) {
+      .browser-top {
+        height: 64px;
+        padding: 6px 14px 8px;
+      }
+
+      .browser-title {
+        font-size: 18px;
+      }
+
+      .browser-url {
+        font-size: 11px;
+      }
+
+      .content {
+        padding: 14px 14px 24px;
+      }
+
+      .menu {
+        font-size: 24px;
+        margin: 8px 0 18px;
+      }
+
+      .event-title {
+        font-size: 28px;
+        line-height: 1.16;
+        margin-bottom: 18px;
+      }
+
+      .selected {
+        font-size: 20px;
+        margin-bottom: 24px;
+      }
+
+      .venue-list {
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .venue-item {
+        min-height: 98px;
+        padding: 18px 16px;
+        border-radius: 10px;
+      }
+
+      .venue-item .date {
+        font-size: 20px;
+      }
+
+      .venue-item .name {
+        font-size: 19px;
+      }
+
+      .input {
+        font-size: 16px;
+        padding: 14px 13px;
+      }
+
+      .btn {
+        min-height: 44px;
+        font-size: 15px;
+        margin-bottom: 12px;
+      }
+
+      .footer-bar {
+        height: 68px;
+        padding: 0 22px;
+        font-size: 30px;
+      }
+    }
+
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
@@ -302,6 +374,9 @@
     <div class="content">
       <div id="view-step1" class="view active">
         <div class="menu">≡</div>
+        <div class="event-title">2026.2.10[Tue] 京セラドーム大阪</div>
+        <div class="selected">選択中： TREASURE</div>
+
         <div class="venue-list" id="venue-options-container"></div>
       </div>
 
