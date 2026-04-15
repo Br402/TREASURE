@@ -1,292 +1,484 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WithLIVE Meet & Greet - FAN CON (30% Win Rate)</title>
-    <style>
-        :root {
-            --withlive-green: #1FD186;
-            --win-red: #E60000;
-            --lose-blue: #0000FF;
-            --bg-gray: #F8F9FA;
-            --border-color: #E5E5EA;
-            --text-main: #1C1C1E;
-            --text-secondary: #8E8E93;
-            --serial-blue: #5BC0DE;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>WithLIVE Meet &amp; Greet</title>
+  <style>
+    :root {
+      --green: #40d18d;
+      --green-dark: #2fbe7a;
+      --text: #222;
+      --sub: #6f6f73;
+      --line: #efefef;
+      --blue: #0018ff;
+      --red: #d80000;
+      --pink: #ff5bb8;
+      --pink-dark: #ff3fa6;
+    }
 
-        body {
-            font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, "Hiragino Sans", sans-serif;
-            background-color: #1a1a1a;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: var(--text-main);
-        }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, "Hiragino Sans", sans-serif;
+      background: #fff;
+      color: var(--text);
+    }
 
-        #phone-shell {
-            width: 375px;
-            height: 780px;
-            background: white;
-            border-radius: 40px;
-            border: 10px solid #222;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
+    .phone {
+      width: 100%;
+      min-height: 100vh;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .browser-header {
-            padding: 12px 15px 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            background: white;
-        }
-        .url-bar { font-size: 11px; color: var(--text-secondary); text-align: center; flex: 1; overflow: hidden; white-space: nowrap; }
+    .browser-top {
+      height: 72px;
+      border-bottom: 1px solid #e9e9e9;
+      background: #f7f7f7;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8px 16px 10px;
+    }
 
-        .main-container {
-            flex: 1;
-            overflow-y: auto;
-            position: relative;
-            background: white;
-        }
+    .browser-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: #111;
+    }
 
-        .view { display: none; padding: 20px; animation: fadeIn 0.2s ease; }
-        .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .browser-title {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1;
+      text-align: center;
+      flex: 1;
+    }
 
-        .hamburger { font-size: 24px; color: var(--text-secondary); margin-bottom: 10px; cursor: pointer; }
+    .browser-url {
+      font-size: 12px;
+      color: #6f6f73;
+      text-align: center;
+      margin-top: 4px;
+      line-height: 1;
+    }
 
-        .event-name { font-size: 18px; font-weight: 800; line-height: 1.4; margin-bottom: 10px; }
-        .instruction { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+    .browser-icon {
+      width: 28px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 300;
+      color: #222;
+      flex: 0 0 28px;
+    }
 
-        .venue-list { height: 480px; overflow-y: auto; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 10px; }
-        .venue-option {
-            padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .venue-option:last-child { border-bottom: none; }
-        .venue-option.selected { background: #f0fff8; color: var(--withlive-green); font-weight: bold; }
+    .content {
+      flex: 1;
+      padding: 18px 18px 30px;
+      max-width: 100%;
+    }
 
-        input[type="text"] {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 16px;
-            box-sizing: border-box;
-            margin-bottom: 20px;
-        }
+    .menu {
+      font-size: 28px;
+      color: #777;
+      line-height: 1;
+      margin: 12px 0 28px;
+    }
 
-        .btn {
-            display: block; width: 100%; padding: 16px; border-radius: 10px;
-            font-weight: bold; font-size: 15px; cursor: pointer; text-align: center;
-            margin-bottom: 12px; border: none;
-        }
-        .btn-green { background: var(--withlive-green); color: white; }
-        .btn-outline { background: white; color: var(--withlive-green); border: 1.5px solid var(--withlive-green); }
-        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .view { display: none; }
+    .view.active { display: block; }
 
-        .res-win { color: var(--win-red); font-size: 34px; font-weight: 900; margin: 20px 0; }
-        .res-lose { color: var(--lose-blue); font-size: 34px; font-weight: 900; margin: 20px 0; }
-        .res-detail { font-size: 14px; line-height: 1.6; color: var(--text-main); margin-bottom: 30px; }
+    .event-title {
+      font-size: 36px;
+      line-height: 1.18;
+      font-weight: 900;
+      margin: 0 0 24px;
+      letter-spacing: -0.03em;
+      word-break: keep-all;
+    }
 
-        .record-card {
-            background: white; border: 1px solid var(--border-color);
-            border-radius: 12px; padding: 15px; margin-bottom: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-        .record-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-        .badge-serial { background: var(--serial-blue); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
-        .record-time { font-size: 10px; color: var(--text-secondary); }
-        .record-venue { font-size: 13px; font-weight: bold; margin: 5px 0; }
-        .record-status { font-weight: 900; font-size: 18px; text-align: center; margin-top: 8px; }
+    .selected {
+      font-size: 26px;
+      font-weight: 900;
+      margin: 0 0 34px;
+      line-height: 1.25;
+    }
 
-        #loader {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: white;
-            display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 1000;
-        }
-        .spinner { width: 45px; height: 45px; border: 5px solid #f3f3f3; border-top: 5px solid var(--withlive-green); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .status {
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 900;
+      margin: 0 0 28px;
+    }
 
-        .browser-footer {
-            height: 50px; background: #fdfdfd; border-top: 1px solid var(--border-color);
-            display: flex; justify-content: space-between; align-items: center; padding: 0 25px;
-        }
-    </style>
+    .status.win { color: var(--red); }
+    .status.lose { color: var(--blue); }
+
+    .detail {
+      font-size: 24px;
+      line-height: 1.42;
+      font-weight: 800;
+      margin: 0 0 34px;
+      word-break: keep-all;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 46px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 800;
+      border: 1.5px solid var(--green);
+      margin-bottom: 14px;
+      cursor: pointer;
+      background: #fff;
+      color: var(--green);
+    }
+
+    .btn.primary {
+      background: var(--green);
+      color: #fff;
+      border-color: var(--green);
+    }
+
+    .btn.primary:active { background: var(--green-dark); }
+
+    .venue-list {
+      margin: 0 0 28px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .venue-item {
+      padding: 22px 18px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #ff6bc1 0%, #ff4bb1 100%);
+      color: #fff;
+      text-align: center;
+      cursor: pointer;
+      line-height: 1.22;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 8px 18px rgba(255,79,176,0.18);
+      transition: transform 0.12s ease, background 0.12s ease;
+    }
+
+    .venue-item:active { transform: scale(0.99); background: linear-gradient(180deg, #ff5ab7 0%, #ff3fa6 100%); }
+    .venue-item.selected { background: #ff4fb0; }
+
+    .venue-item .date {
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.18);
+      margin-bottom: 4px;
+    }
+
+    .venue-item .name {
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.18);
+      word-break: keep-all;
+    }
+
+    .input {
+      width: 100%;
+      border: 1.5px solid #ddd;
+      border-radius: 6px;
+      padding: 15px 14px;
+      font-size: 17px;
+      outline: none;
+      margin: 0 0 18px;
+    }
+
+    .input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(64, 209, 141, 0.12);
+    }
+
+    .history-card {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .history-card:last-child { border-bottom: none; }
+    .history-serial {
+      display: inline-block;
+      background: #5bc0de;
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      margin-bottom: 8px;
+    }
+
+    .history-time {
+      color: #8b8b90;
+      font-size: 12px;
+      float: right;
+      margin-top: 1px;
+    }
+
+    .history-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin: 6px 0 4px;
+    }
+
+    .history-venue {
+      font-size: 14px;
+      color: #444;
+      margin-bottom: 8px;
+    }
+
+    .history-status {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .footer-bar {
+      height: 86px;
+      border-top: 1px solid #ececec;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      color: #222;
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    .footer-bar .ghost { color: #bdbdbd; }
+
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #eee;
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
+  <div id="loader"><div class="spinner"></div></div>
 
-<div id="phone-shell">
-    <div class="browser-header">
-        <span style="font-size: 20px;">✕</span>
-        <div class="url-bar">mg.withlive-app.com</div>
-        <span style="font-weight: bold;">•••</span>
+  <div class="phone">
+    <div class="browser-top">
+      <div class="browser-row">
+        <div class="browser-icon">×</div>
+        <div class="browser-title">WithLIVE Meet&amp;Greet</div>
+        <div class="browser-icon">•••</div>
+      </div>
+      <div class="browser-url">mg.withlive-app.com</div>
     </div>
 
-    <div class="main-container">
-        <div id="loader">
-            <div class="spinner"></div>
-            <p style="margin-top:20px; color:var(--text-secondary);">抽選中...</p>
-        </div>
+    <div class="content">
+      <div id="view-step1" class="view active">
+        <div class="menu">≡</div>
+        <div class="venue-list" id="venue-options-container"></div>
+      </div>
 
-        <div id="view-step1" class="view active">
-            <div class="hamburger">≡</div>
-            <div class="event-name">TREASURE 2026 FAN CON [STAGE] 応募</div>
-            <p class="instruction">希望の公演を選択してください</p>
-            <div class="venue-list" id="venue-options-container"></div>
-            <button class="btn btn-green" id="to-step2-btn" disabled onclick="goToStep2()">次へ</button>
-        </div>
+      <div id="view-step2" class="view">
+        <div class="menu">≡</div>
+        <div class="event-title" style="font-size:30px; margin-bottom:24px;">シリアルコード入力</div>
+        <div class="selected" id="selected-venue-display" style="font-size:20px; margin-bottom:24px;"></div>
+        <input class="input" type="text" id="serial-input" placeholder="例：qyfJWT22GH5C" maxlength="16" autocomplete="off" />
+        <button class="btn primary" id="draw-btn">抽選する</button>
+        <button class="btn" id="back-btn">戻る</button>
+      </div>
 
-        <div id="view-step2" class="view">
-            <div class="hamburger">≡</div>
-            <div class="event-name">シリアルコード入力</div>
-            <p id="selected-venue-display" style="color: var(--withlive-green); font-weight: bold; font-size: 14px; margin-bottom: 10px;"></p>
-            <input type="text" id="serial-input" placeholder="例：qyfJWT22GH5C" maxlength="16">
-            <button class="btn btn-green" onclick="handleDraw()">抽選する</button>
-            <button class="btn btn-outline" onclick="showView('view-step1')">戻る</button>
-        </div>
+      <div id="view-result" class="view">
+        <div class="menu">≡</div>
+        <div class="event-title" style="font-size:32px; margin-bottom:26px;" id="res-venue-name"></div>
+        <div class="selected" style="font-size:20px; margin-bottom:30px;">選択中： TREASURE</div>
+        <div id="res-status"></div>
+        <div id="res-text" class="detail"></div>
+        <button class="btn primary" id="history-btn">エントリー状況を確認</button>
+        <button class="btn" id="home-btn">この賞のトップに戻る</button>
+        <button class="btn" id="new-entry-btn">応募ページトップに戻る</button>
+      </div>
 
-        <div id="view-result" class="view">
-            <div class="hamburger">≡</div>
-            <div id="res-venue-name" style="font-weight: 800; font-size: 16px;"></div>
-            <p style="font-size: 13px; margin: 5px 0 15px;">選択中：TREASURE</p>
-            <div id="res-status"></div>
-            <div id="res-text" class="res-detail"></div>
-            <button class="btn btn-green" onclick="showHistory()">エントリー状況を確認</button>
-            <button class="btn btn-outline" onclick="resetToHome()">応募ページトップに戻る</button>
-        </div>
-
-        <div id="view-history" class="view">
-            <div class="hamburger">≡</div>
-            <div style="border-bottom: 3px solid var(--withlive-green); padding-bottom: 8px; margin-bottom: 20px;">
-                <span style="font-weight: 900;">応募済み/履歴</span>
-            </div>
-            <div id="history-container"></div>
-            <button class="btn btn-outline" style="margin-top: 10px;" onclick="showView('view-step1')">新しいシリアルで応募</button>
-        </div>
+      <div id="view-history" class="view">
+        <div class="menu">≡</div>
+        <div style="border-bottom: 3px solid var(--green); padding-bottom: 8px; margin-bottom: 18px; font-size: 18px; font-weight: 900;">応募済み/履歴</div>
+        <div id="history-container"></div>
+        <button class="btn" style="margin-top:18px;" id="history-home-btn">応募ページトップに戻る</button>
+      </div>
     </div>
 
-    <div class="browser-footer">
-        <span style="font-size: 20px;">＜</span>
-        <span style="color:var(--text-secondary); font-size: 12px;">🌐 日本語</span>
-        <span style="font-size: 20px;">＞</span>
+    <div class="footer-bar">
+      <span>‹</span>
+      <span class="ghost">›</span>
     </div>
-</div>
+  </div>
 
-<script>
+  <script>
     const venues = [
-        { name: "大阪城ホール", dates: ["2026年7月8日", "2026年7月9日"] },
-        { name: "Kアリーナ横浜", dates: ["2026年7月18日", "2026年7月19日", "2026年7月20日"] },
-        { name: "GLION ARENA KOBE", dates: ["2026年7月25日", "2026年7月26日"] },
-        { name: "IGアリーナ", dates: ["2026年8月1日", "2026年8月2日"] },
-        { name: "サンドーム福井", dates: ["2026年8月8日", "2026年8月9日"] },
-        { name: "マリンメッセ福岡A馆", dates: ["2026年8月22日", "2026年8月23日"] },
-        { name: "有明アリーナ", dates: ["2026年9月5日", "2026年9月6日"] }
+      { name: "大阪城ホール", dates: ["2026年7月8日", "2026年7月9日"] },
+      { name: "Kアリーナ横浜", dates: ["2026年7月18日", "2026年7月19日", "2026年7月20日"] },
+      { name: "GLION ARENA KOBE", dates: ["2026年7月25日", "2026年7月26日"] },
+      { name: "IGアリーナ", dates: ["2026年8月1日", "2026年8月2日"] },
+      { name: "サンドーム福井", dates: ["2026年8月8日", "2026年8月9日"] },
+      { name: "マリンメッセ福岡A館", dates: ["2026年8月22日", "2026年8月23日"] },
+      { name: "有明アリーナ", dates: ["2026年9月5日", "2026年9月6日"] }
     ];
 
     let currentSelectedVenue = "";
-    let globalHistory = []; 
+    let globalHistory = [];
 
     const container = document.getElementById('venue-options-container');
-    venues.forEach(v => {
-        v.dates.forEach(date => {
-            const div = document.createElement('div');
-            div.className = 'venue-option';
-            div.innerText = `${date} 【${v.name}】`;
-            div.onclick = function() {
-                document.querySelectorAll('.venue-option').forEach(el => el.classList.remove('selected'));
-                this.classList.add('selected');
-                currentSelectedVenue = this.innerText;
-                document.getElementById('to-step2-btn').disabled = false;
-            };
-            container.appendChild(div);
-        });
-    });
+    const serialInput = document.getElementById('serial-input');
+    const loader = document.getElementById('loader');
 
     function showView(id) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.querySelector('.main-container').scrollTop = 0;
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function formatDateLabel(dateStr) {
+      const m = dateStr.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+      if (!m) return dateStr;
+      const year = Number(m[1]);
+      const month = Number(m[2]);
+      const day = Number(m[3]);
+      const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(year, month - 1, day).getDay()];
+      return `${year}.${month}.${day}[${weekday}]`;
+    }
+
+    function renderVenues() {
+      container.innerHTML = '';
+      venues.forEach(v => {
+        v.dates.forEach(date => {
+          const item = document.createElement('div');
+          item.className = 'venue-item';
+          const labelDate = formatDateLabel(date);
+          item.dataset.label = `${labelDate} ${v.name} 公開リハーサルに応募する`;
+          item.innerHTML = `<div><div class="date">${labelDate}</div><div class="name">${v.name} 公開リハーサルに応募する</div></div>`;
+          item.addEventListener('click', () => {
+            document.querySelectorAll('.venue-item').forEach(el => el.classList.remove('selected'));
+            item.classList.add('selected');
+            currentSelectedVenue = item.dataset.label;
+            goToStep2();
+          });
+          container.appendChild(item);
+        });
+      });
+    }
+
+    function formatNow() {
+      const d = new Date();
+      const p = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
     }
 
     function goToStep2() {
-        document.getElementById('selected-venue-display').innerText = `選択中：${currentSelectedVenue}`;
-        showView('view-step2');
+      if (!currentSelectedVenue) return;
+      document.getElementById('selected-venue-display').textContent = `選択中： ${currentSelectedVenue}`;
+      showView('view-step2');
+      serialInput.focus();
     }
 
     function handleDraw() {
-        const serial = document.getElementById('serial-input').value.trim() || "CODE-" + Math.floor(Math.random()*9000);
-        document.getElementById('loader').style.display = 'flex';
+      const serial = serialInput.value.trim() || `CODE-${Math.floor(Math.random() * 9000)}`;
+      loader.style.display = 'flex';
 
-        setTimeout(() => {
-            document.getElementById('loader').style.display = 'none';
-            
-            // --- 修改概率为 30% ---
-            const isWin = Math.random() < 0.3; 
-            const statusLabel = isWin ? "当選" : "落選";
+      setTimeout(() => {
+        loader.style.display = 'none';
+        const isWin = Math.random() < 0.3;
+        const statusLabel = isWin ? '当選' : '落選';
 
-            const now = new Date();
-            const timeStr = `${now.getFullYear()}/${(now.getMonth()+1).toString().padStart(2,'0')}/${now.getDate().toString().padStart(2,'0')} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
-            
-            globalHistory.unshift({
-                serial: serial,
-                venue: currentSelectedVenue,
-                time: timeStr,
-                status: statusLabel
-            });
+        globalHistory.unshift({ serial, venue: currentSelectedVenue, time: formatNow(), status: statusLabel });
 
-            document.getElementById('res-venue-name').innerText = currentSelectedVenue;
-            const resStatus = document.getElementById('res-status');
-            const resText = document.getElementById('res-text');
+        document.getElementById('res-venue-name').textContent = currentSelectedVenue;
+        const resStatus = document.getElementById('res-status');
+        const resText = document.getElementById('res-text');
 
-            if(isWin) {
-                resStatus.className = "res-win";
-                resStatus.innerText = "当選";
-                resText.innerText = "ご当選についてのご案内をご登録メールアドレスに送信しましたので必ずご確認いただきますようお願いいたします。";
-            } else {
-                resStatus.className = "res-lose";
-                resStatus.innerText = "落選";
-                resText.innerHTML = `落選内容：${currentSelectedVenue}<br><br>別のシリアルコードでご応募される場合は、「応募ページトップに戻る」を選択してください。`;
-            }
-            showView('view-result');
-        }, 800);
+        if (isWin) {
+          resStatus.className = 'status win';
+          resStatus.textContent = '当選';
+          resText.textContent = 'ご当選についてのご案内をご登録メールアドレスに送信しましたので必ずご確認いただきますようお願いいたします。';
+        } else {
+          resStatus.className = 'status lose';
+          resStatus.textContent = '落選';
+          resText.innerHTML = `落選内容: ${currentSelectedVenue}<br><br>別のシリアルコードでご応募される場合は、「応募ページトップに戻る」を選択してください。`;
+        }
+
+        showView('view-result');
+      }, 800);
     }
 
     function showHistory() {
-        const hContainer = document.getElementById('history-container');
-        hContainer.innerHTML = "";
+      const hContainer = document.getElementById('history-container');
+      hContainer.innerHTML = '';
+
+      if (globalHistory.length === 0) {
+        hContainer.innerHTML = '<div style="color:#777;font-size:14px;line-height:1.6;">まだ応募履歴がありません。</div>';
+      } else {
         globalHistory.forEach(item => {
-            const card = document.createElement('div');
-            card.className = "record-card";
-            card.innerHTML = `
-                <div class="record-header">
-                    <span class="badge-serial">${item.serial}</span>
-                    <span class="record-time">${item.time}</span>
-                </div>
-                <div class="record-venue">TREASURE 2026 FAN CON [STAGE]</div>
-                <div style="font-size:12px; color:#555;">${item.venue}</div>
-                <div class="record-status" style="color:${item.status==='当選'?'#E60000':'#0000FF'}">${item.status}</div>
-            `;
-            hContainer.appendChild(card);
+          const card = document.createElement('div');
+          card.className = 'history-card';
+          card.innerHTML = `
+            <div><span class="history-serial">${item.serial}</span><span class="history-time">${item.time}</span></div>
+            <div class="history-title">TREASURE 2026 FAN CON [STAGE]</div>
+            <div class="history-venue">${item.venue}</div>
+            <div class="history-status" style="color:${item.status === '当選' ? 'var(--red)' : 'var(--blue)'}">${item.status}</div>
+          `;
+          hContainer.appendChild(card);
         });
-        showView('view-history');
+      }
+
+      showView('view-history');
     }
 
-    function resetToHome() {
-        document.getElementById('serial-input').value = "";
-        showView('view-step1');
+    function resetToHome(clearSelection = true) {
+      serialInput.value = '';
+      if (clearSelection) {
+        currentSelectedVenue = '';
+        document.querySelectorAll('.venue-item').forEach(el => el.classList.remove('selected'));
+      }
+      showView('view-step1');
     }
-</script>
 
+    document.getElementById('draw-btn').addEventListener('click', handleDraw);
+    document.getElementById('back-btn').addEventListener('click', () => showView('view-step1'));
+    document.getElementById('history-btn').addEventListener('click', showHistory);
+    document.getElementById('home-btn').addEventListener('click', () => resetToHome(true));
+    document.getElementById('new-entry-btn').addEventListener('click', () => resetToHome(true));
+    document.getElementById('history-home-btn').addEventListener('click', () => resetToHome(true));
+
+    serialInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleDraw();
+    });
+
+    renderVenues();
+  </script>
 </body>
 </html>
